@@ -86,6 +86,8 @@ class Integrator:
 
             result_table = sorted(result_table, key=lambda elem: [elem[i] for i in range(len(char_elems))])
 
+            result_table[0] = [i[0] + 'S' + i[1:] if i[0] == 'M' else i for i in self.result_columns]
+
         with open('out/advanced_solution.tsv', 'w', encoding='UTF-8') as out_file:
             writer = csv.writer(out_file, delimiter='\t')
 
