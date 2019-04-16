@@ -26,4 +26,5 @@ if __name__ == '__main__':
     integrator.set_result_columns()
     integrator.make_table()
     integrator.basic_solution()
+    integrator.advanced_solution()
     print()
