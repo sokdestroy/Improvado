@@ -7,3 +7,6 @@ class Worker(ABC):
 
     def get_str(self):
         pass
+
+    def set_logger(self, logger):
+        self.logger = logger

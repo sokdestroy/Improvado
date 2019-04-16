@@ -1,14 +1,16 @@
 import csv
 from workers.common import sorting
-
+from logger import Logger
 
 class Integrator:
     def __init__(self):
         self.result_table = []
         self.result_columns = []
         self.workers = []
+        self.logger = Logger()
 
     def add_worker(self, worker):
+        worker.set_logger(self.logger)
         self.workers.append(worker)
 
     def set_result_columns(self):
@@ -19,9 +21,13 @@ class Integrator:
         self.result_columns = sorting(self.result_columns)
 
     def make_table(self):
+        log_file = open('out/logfile.log', 'w', encoding='UTF-8')
+
         self.result_table.append(self.result_columns)
         for worker in self.workers:
             for data in worker.get_str():
+                if data is None:
+                    continue
                 result_str = []
                 for column in self.result_columns:
                     result_str.append(data[column])

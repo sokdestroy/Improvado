@@ -1,6 +1,6 @@
 import json
 from workers.worker import Worker
-from workers.common import sorting
+from workers.common import sorting, check_for_bad_symbols
 
 
 class JsonWorker(Worker):
@@ -13,7 +13,11 @@ class JsonWorker(Worker):
 
     def get_str(self):
         for d in self.__data:
-            yield sorting(d)
+            if check_for_bad_symbols(d):
+                yield sorting(d)
+            else:
+                self.logger.write_message(d, self.file_path)
+                yield None
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
 import csv
 from workers.worker import Worker
-from workers.common import sorting
+from workers.common import sorting, check_for_bad_symbols
 
 
 class CSVWorker(Worker):
@@ -14,9 +14,18 @@ class CSVWorker(Worker):
         for s in self.__reader:
             result = {}
             for col_number in range(len(self.columns)):
-                result[self.columns[col_number]] = s[col_number]
+                try:
+                    value = int(s[col_number])
+                except ValueError:
+                    value = s[col_number]
 
-            yield sorting(result)
+                result[self.columns[col_number]] = value
+
+            if check_for_bad_symbols(result):
+                yield sorting(result)
+            else:
+                self.logger.write_message(result, self.file_path)
+                yield None
         self.__csv_file.close()
 
 

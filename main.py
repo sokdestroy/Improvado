@@ -23,6 +23,7 @@ if __name__ == '__main__':
         elif postfix == 'xml':
             integrator.add_worker(XMLWorker(path))
 
+
     integrator.set_result_columns()
     integrator.make_table()
     integrator.basic_solution()

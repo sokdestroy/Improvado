@@ -1,6 +1,6 @@
 import xml.etree.ElementTree as etree
 from workers.worker import Worker
-from workers.common import sorting
+from workers.common import sorting, check_for_bad_symbols
 
 
 class XMLWorker(Worker):
@@ -19,8 +19,17 @@ class XMLWorker(Worker):
         for objects in self.__root:
             res = {}
             for object in objects:
-                res[list(object.attrib.values())[0]] = object.find('value').text
-            yield sorting(res)
+                try:
+                    value = int(object.find('value').text)
+                except ValueError:
+                    value = object.find('value').text
+                res[list(object.attrib.values())[0]] = value
+
+            if check_for_bad_symbols(res):
+                yield sorting(res)
+            else:
+                self.logger.write_message(res, self.file_path)
+                yield None
 
 
 if __name__ == '__main__':
